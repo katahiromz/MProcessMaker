@@ -51,6 +51,8 @@ void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
     case IDOK:
     case IDCANCEL:
         KillTimer(hwnd, IDT_TIMER_OUTPUT);
+        if (g_maker.IsRunning())
+            g_maker.TerminateProcess(-1);
         EndDialog(hwnd, id);
         break;
     case psh1: // Enterボタンが押された時

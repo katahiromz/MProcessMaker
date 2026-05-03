@@ -50,9 +50,6 @@ void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
     {
     case IDOK:
     case IDCANCEL:
-        KillTimer(hwnd, IDT_TIMER_OUTPUT);
-        if (g_maker.IsRunning())
-            g_maker.TerminateProcess(-1);
         EndDialog(hwnd, id);
         break;
     case psh1: // Enterボタンが押された時
@@ -113,6 +110,14 @@ HBRUSH OnCtlColor(HWND hwnd, HDC hdc, HWND hwndChild, int type)
     return GetStockBrush(BLACK_BRUSH);
 }
 
+// WM_DESTROY
+void OnDestroy(HWND hwnd)
+{
+    KillTimer(hwnd, IDT_TIMER_OUTPUT);
+    if (g_maker.IsRunning())
+        g_maker.TerminateProcess(-1);
+}
+
 INT_PTR CALLBACK
 DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -120,6 +125,7 @@ DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         HANDLE_MSG(hwnd, WM_INITDIALOG, OnInitDialog);
         HANDLE_MSG(hwnd, WM_COMMAND, OnCommand);
+        HANDLE_MSG(hwnd, WM_DESTROY, OnDestroy);
         HANDLE_MSG(hwnd, WM_CTLCOLORSTATIC, OnCtlColor);
         HANDLE_MSG(hwnd, WM_TIMER, OnTimer);
     }
